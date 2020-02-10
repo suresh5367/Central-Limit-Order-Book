@@ -156,7 +156,7 @@ namespace CS {
 
     }
     bool FeedHandler::ParseOrder(char *tokenMsg, Order &order) {
-    	std::cout<<"parseorder tokenMsg->"<<tokenMsg<<std::endl;
+
             // order id
             ParseResult result = ParseTokenAsUInt64(tokenMsg, order.orderId);
             if (result != ParseResult ::Good){
@@ -223,7 +223,7 @@ namespace CS {
                 order.action = mt;
 
            if (mt == MessageType::Remove) {
-        	   std::cout<<"calling  ParseCancelOrder"<<cancelorderId;
+
         	   if(ParseCancelOrder(buf,cancelorderId))
         	   {
         	       //tokenMsg:otokenMsg:o
@@ -236,10 +236,10 @@ namespace CS {
            else if(mt==MessageType::Modify)
            {
 
-               std::cout << "calling  ParseAmendOrder\n" << AmendorderId;
+
                if (ParseAmendOrder(buf, AmendorderId, AmendorderSize))
                {
-                   std::cout << "calling engine HandleCancelOrder\n" << cancelorderId;
+
                    engine_.HandleAmendOrder(AmendorderId, AmendorderSize);
                }
                else
@@ -261,12 +261,10 @@ namespace CS {
            {
                if (ParseQueryOrder(buf, queryorderId))
                {
-                   std::cout << "calling engine HandleQueryOrder" << queryorderId<<endl;
                    engine_.HandleQueryOrder(queryorderId);
                }
                else if (ParseQueryLevelOrder(buf, querySide,depth))
                {
-                   std::cout << "calling engine HandleQueryLevelOrder  side:" << querySide<<" depth:"<<depth<<endl;
                    engine_.HandleQueryLevelOrder(querySide,depth,std::cout);
                }              
                else {
