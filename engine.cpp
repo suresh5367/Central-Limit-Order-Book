@@ -119,7 +119,6 @@ namespace CS {
 
     void Engine::HandleAmendOrder(OrderId Amendorderid, TradeSize Amendsize)
     {
-        std::cout << Amendorderid << "Handle Amend order with size:"<< Amendsize<<" \n";
         auto&& oldOrderIt = hisOrderEntry_.find(Amendorderid);
         //some entry should be there
         if (oldOrderIt != hisOrderEntry_.end()) {
@@ -153,7 +152,6 @@ namespace CS {
         }
         else
         {
-            cout<<"checking in cancel order list \n ";
             auto&& querycancelOrderIt = CancelOrderEntry_.find(orderid);
             if (querycancelOrderIt != CancelOrderEntry_.end()) {
                 Order retrieveOrder = querycancelOrderIt->second;
@@ -201,7 +199,6 @@ namespace CS {
                     return;
                 }
 
-                std::cout<<"Modify id :"<<order.orderId<<""<<order.size;
                 Modify(oldOrder, const_cast<Order&>(order));
 
             } else {
@@ -251,7 +248,6 @@ namespace CS {
             if (newOrder.side == BUY) {
                 auto &&buyOrderList = buyOrderBook_.find(oldOrder.price);
                 if (buyOrderList != buyOrderBook_.end()) {
-                    std::cout<<"buyOrderList->second.GetTradeSize:"<<buyOrderList->second.GetTradeSize()<< "newOrder.size-oldOrder.size->"<<(newOrder.size-oldOrder.size)<<"\n";
                     buyOrderList->second.DecreaseTradeSize(oldOrder.size-newOrder.size);
                     oldOrder.ptr->size = newOrder.size;
                 } else {
@@ -322,32 +318,7 @@ namespace CS {
     void Engine::Add(const Order &tmpOrder) {
         CheckAskBidPx();
 
-        if (tmpOrder.orderId == 12345)
-        {
-            //query 100002
-
-            OrderId     query_orderId;
-            query_orderId = 100002;
-            auto query_OrderIdItr = this->hisOrderEntry_.find(query_orderId);
-            if (query_OrderIdItr != hisOrderEntry_.end()) {
-                std::cout << (int)query_OrderIdItr->second.status;
-            }
-
-            //print level 0 ask(sell)
-            if (sellOrderBook_.empty())
-            {
-                cout << "Error querying the Level\n";
-            }
-            else
-            {
-                auto&& highestSellIter = sellOrderBook_.begin();
-
-                cout << "q,ask,0->" << highestSellIter->first << " with size" << highestSellIter->second.GetTradeSize() << endl;
-
-            }
-
-
-        }
+        
 
         auto &&ret = hisOrderEntry_.insert(std::make_pair(tmpOrder.orderId, tmpOrder));
         Order &order = ret.first->second;
@@ -420,7 +391,6 @@ namespace CS {
                     totalfill += match_trade.tradeSize;
                 }
                 match_trade.tradePrice=highestBuyIter->first;
-                cout << "pushing "<< match_trade.tradePrice<< match_trade.tradeSize<<endl;
                 matched_trades.push_back(match_trade);
 
 
@@ -430,7 +400,6 @@ namespace CS {
             {
                 if ((matchedTradesitr->tradePrice > 0) && matchedTradesitr->tradeSize > 0)
                 {
-                    cout << "Handling Trade " << matchedTradesitr->tradePrice << matchedTradesitr->tradeSize << endl;
                     HandleTrade(*matchedTradesitr);
                 }
             }
@@ -485,7 +454,7 @@ namespace CS {
                     totalfill += sell_match_trade.tradeSize;
                 }
                 sell_match_trade.tradePrice = highestSellIter->first;
-                cout << "pushing into Sell List "<< sell_match_trade.tradePrice<< sell_match_trade.tradeSize<<endl;
+              
                 sell_matched_trades.push_back(sell_match_trade);
 
 
@@ -496,7 +465,6 @@ namespace CS {
             {
                 if ((matchedTradesitr->tradePrice > 0) && matchedTradesitr->tradeSize > 0)
                 {
-                    cout << "Handling Trade when a new Sell Order comes " << matchedTradesitr->tradePrice << matchedTradesitr->tradeSize << endl;
                     HandleTrade(*matchedTradesitr);
                 }
             }
@@ -520,24 +488,7 @@ namespace CS {
             return;
         }
 
-        //  WORKIED for small order .
-
-        /* for ()
-         {
-         }*/
-        /* OLD DESIGN find
-        auto &&sellIter = sellOrderBook_.find(trade.tradePrice);
-        //try this
-        if (sellIter == sellOrderBook_.end()) {
-            //The price Bid may be greater then offer price or vice versa.
-            //ex:sell @ 13 order present and new order with buy came at 14.
-            sellIter = sellOrderBook_.begin();
-            if(sellIter== sellOrderBook_.end() && sellIter->first>trade.tradePrice)
-            {
-                ErrorMonitor::GetInstance().TradeOnMissingOrder();
-                return;
-            }
-        }*/
+        
 
         auto &&sellIter = sellOrderBook_.begin();
         //try this
@@ -551,18 +502,7 @@ namespace CS {
         }
 
 
-        //Handling for bulk order
-        /*
-        auto&& sellIter = sellOrderBook_.rbegin();
-        sellIter--;
-        //if trade BuyPrice is greater than the offer(sell) price , execute at buy price (It can be changed to Offer price also)
-        if(trade.tradePrice)
-        //auto&& sellIter = sellOrderBook_.find(trade.tradePrice);
-        if (sellIter == sellOrderBook_.end()) {
-            ErrorMonitor::GetInstance().TradeOnMissingOrder();
-            return;
-        }
-        */
+        
 
         //ensure enough orderlist quantity
         TradeSize  ts = trade.tradeSize;
