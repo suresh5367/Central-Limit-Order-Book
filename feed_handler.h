@@ -48,7 +48,7 @@ namespace CS {
             else {
                 char * pEnd = NULL;
                 dest = std::strtoull(tk_msg, &pEnd, 10);
-                std::cout<<"setting"<<dest<<" from buffer\n";
+
                 if (*pEnd)
                     return ParseResult::InvalidMsgData;
             }
@@ -145,12 +145,10 @@ namespace CS {
             }
 
             tokenMsg = strtok(tokenMsg, " ");
-            std::cout<<"tokenMsg:"<<tokenMsg<<std::endl;
+
             switch(tokenMsg[0]) {
                 case 'o':
 
-
-                    	std::cout<<"Adding \n";
                     	return MessageType::Add;
 
 
@@ -161,7 +159,7 @@ namespace CS {
                     break;
                 case 'c':
                 	//if(strcmp(tokenMsg,"cancel")==0)
-                	std::cout<<"cancelling \n";
+
                 		return MessageType::Remove;
                     break;
                 case 'T':
