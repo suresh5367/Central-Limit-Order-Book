@@ -17,9 +17,7 @@ int main(int argc, char **argv)
 
         std::string filename(argv[1]);
 
-        if (filename.empty())
-            filename.assign("input");
-        std::cout << filename.c_str() << std::endl;
+        std::cout << "parsing input file :"<<filename.c_str() << std::endl;
         std::ifstream infile(filename.c_str(), std::ios::in);
 
 
